@@ -21,20 +21,23 @@ int tlen(tuple t) asm "TLEN";
     int i = 0;
     int j = 0;
     int k = 0;
+    int number = 0;
     tuple answer = empty_tuple();
     while(i < rowA){
+        tuple row_answer = empty_tuple();
         while(j < columnB){
-            tuple row_answer = empty_tuple();
             while(k < columnA){
-                row_answer~tpush(matrixA.at(i).at(k) * matrixB.at(k).at(j));
+                number += matrixA.at(i).at(k) * matrixB.at(k).at(j);
                 k += 1;
             }
-            answer~tpush(row_answer);
+            row_answer~tpush(number);
+            number = 0;
             k = 0;
             j += 1;
         }
-    j = 0;
-    i += 1;
+        answer~tpush(row_answer);
+        j = 0;
+        i += 1;
     }
   return answer;
 }
