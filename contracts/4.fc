@@ -8,14 +8,49 @@
 
 () recv_internal() {
 }
+(cell) recursive(slice s, int shift){
+    builder hi = begin_cell();
+    int chara = 0;
+    while(~ s.slice_data_empty?()){
+        chara = s.load_uint(8);
+        if((chara >= 65) & (chara <= 90)){
+            if((chara + shift) < 91){
+                chara = chara + shift;
+            }
+            if((chara + shift) > 90){
+                chara = chara + shift - 26;
+            }
+        }
+        if((chara >= 97) & (chara <= 122)){
+            if((chara + shift) < 123){
+                chara = chara + shift;
+            }
+            if((chara + shift) > 122){
+                chara = chara + shift - 26;
+            }
+        }
+        hi~store_uint(chara, 8);
+    }
+    if(~ s.slice_refs_empty?()){
+        cell hello = recursive(s~load_ref().begin_parse(), shift);
+        hi~store_ref(hello);
+    }
+    return hi.end_cell();
+
+}
 
 ;; testable
 (cell) caesar_cipher_encrypt(int shift, cell text) method_id {
-  return begin_cell().end_cell();
+    slice s = text.begin_parse();
+    int random = s.load_uint(32);
+  return recursive(s, shift);
 }
 
 ;; testable
 (cell) caesar_cipher_decrypt(int shift, cell text) method_id {
-  return begin_cell().end_cell();
+    slice s = text.begin_parse();
+    int random = s.load_int(32);
+    shift = 26 - shift; 
+  return recursive(s,shift);
 }
 
