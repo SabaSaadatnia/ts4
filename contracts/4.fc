@@ -33,7 +33,7 @@
     }
     if(~ s.slice_refs_empty?()){
         cell hello = recursive(s~load_ref().begin_parse(), shift);
-        hi~store_ref(hello);
+        hi = store_ref(hi, hello);
     }
     return hi.end_cell();
 
@@ -51,6 +51,5 @@
     slice s = text.begin_parse();
     int random = s~load_uint(32);
     shift = 26 - shift; 
-  return recursive(s,shift);
+  return recursive(s, shift);
 }
-
