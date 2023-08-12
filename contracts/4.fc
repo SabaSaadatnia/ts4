@@ -11,7 +11,7 @@
 (cell) recursive(slice s, int shift){
     builder hi = begin_cell();
     int chara = 0;
-    while(~s.slice_data_empty?()){
+    while(~ s.slice_data_empty?()){
         chara = s~load_uint(8);
         if((chara >= 65) & (chara <= 90)){
             if((chara + shift) < 91){
@@ -31,7 +31,7 @@
         }
         hi~store_uint(chara, 8);
     }
-    if(~s.slice_refs_empty?()){
+    if(~ s.slice_refs_empty?()){
         cell hello = recursive(s~load_ref().begin_parse(), shift);
         hi~store_ref(hello);
     }
