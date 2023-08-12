@@ -12,7 +12,7 @@
     builder hi = begin_cell();
     int chara = 0;
     while(~s.slice_data_empty?()){
-        chara = s.load_uint(8);
+        chara = s~load_uint(8);
         if((chara >= 65) & (chara <= 90)){
             if((chara + shift) < 91){
                 chara = chara + shift;
@@ -42,14 +42,14 @@
 ;; testable
 (cell) caesar_cipher_encrypt(int shift, cell text) method_id {
     slice s = text.begin_parse();
-    int random = s.load_uint(32);
+    int random = s~load_uint(32);
   return recursive(s, shift);
 }
 
 ;; testable
 (cell) caesar_cipher_decrypt(int shift, cell text) method_id {
     slice s = text.begin_parse();
-    int random = s.load_int(32);
+    int random = s~load_uint(32);
     shift = 26 - shift; 
   return recursive(s,shift);
 }
