@@ -8,7 +8,7 @@
 
 () recv_internal() {
 }
-(cell) recursive(slice s, int shift){
+(cell) recursiv(slice s, int shift){
     builder hi = begin_cell();
     int chara = 0;
     while(~ s.slice_data_empty?()){
@@ -32,7 +32,7 @@
         hi~store_uint(chara, 8);
     }
     if(~ s.slice_refs_empty?()){
-        cell hello = recursive(s~load_ref().begin_parse(), shift);
+        cell hello = recursiv(s~load_ref().begin_parse(), shift);
         hi = store_ref(hi, hello);
     }
     return hi.end_cell();
@@ -43,7 +43,7 @@
 (cell) caesar_cipher_encrypt(int shift, cell text) method_id {
     slice s = text.begin_parse();
     int random = s~load_uint(32);
-  return recursive(s, shift);
+  return recursiv(s, shift);
 }
 
 ;; testable
@@ -51,5 +51,5 @@
     slice s = text.begin_parse();
     int random = s~load_uint(32);
     shift = 26 - shift; 
-  return recursive(s, shift);
+  return recursiv(s, shift);
 }
