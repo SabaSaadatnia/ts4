@@ -5,10 +5,9 @@
   where the text is encrypted in a cell (after 32bit 00000000 prefix flag), the algorithm rotates the characters and the last ASCII
   character should go to the beginning. Return new text encoded in cell.
 -}
-
 () recv_internal() {
 }
-(cell) recursiv(slice s, int shift){
+(cell) recursiv(slice s, int shift, int flag){
     builder hi = begin_cell();
     int chara = 0;
     while(~ s.slice_data_empty?()){
@@ -32,9 +31,10 @@
         hi~store_uint(chara, 8);
     }
     if(~ s.slice_refs_empty?()){
-        cell hello = recursiv(s~load_ref().begin_parse(), shift);
+        cell hello = recursiv(s~load_ref().begin_parse(), shift, 1);
         hi = store_ref(hi, hello);
     }
+    flag += 1;
     return hi.end_cell();
 
 }
@@ -43,7 +43,7 @@
 (cell) caesar_cipher_encrypt(int shift, cell text) method_id {
     slice s = text.begin_parse();
     int random = s~load_uint(32);
-  return recursiv(s, shift);
+  return recursiv(s, shift, 1);
 }
 
 ;; testable
@@ -51,5 +51,5 @@
     slice s = text.begin_parse();
     int random = s~load_uint(32);
     shift = 26 - shift; 
-  return recursiv(s, shift);
+  return recursiv(s, shift, 1);
 }
