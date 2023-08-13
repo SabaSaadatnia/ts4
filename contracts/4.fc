@@ -10,7 +10,6 @@
 cell recursiv(slice s, int shift, int flag){
     builder hi = begin_cell();
     int chara = 0;
-    int jam = chara + shift;
     if (flag == 1){
         flag = 0;   
         hi~store_int(0, 32);
@@ -18,20 +17,19 @@ cell recursiv(slice s, int shift, int flag){
     while(~ s.slice_data_empty?()){
         chara = 0;
         chara = s~load_uint(8);
-        if((65 <= chara) & (chara <= 90)){
-            
-            if(jam <= 90){
+        if((chara >= 65) & (chara <= 90)){
+            if((chara + shift) <= 90){
                 chara = chara + shift;
             }
-            if(jam > 90){
+            if((chara + shift) > 90){
                 chara = chara + shift - 26;
             }
         }
-        if((97 <= chara) & (chara <= 122)){
+        if((chara >= 97) & (chara <= 122)){
             if((chara + shift) <= 122){
                 chara = chara + shift;
             }
-            if(jam > 122){
+            if((chara + shift) > 122){
                 chara = chara + shift - 26;
             }
         }
