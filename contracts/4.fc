@@ -14,27 +14,26 @@ cell recursiv(slice s, int shift, int flag){
         flag = 0;   
         hi~store_int(0, 32);
     }
-    if(~ s.slice_data_empty?()){
+    while(~ s.slice_data_empty?()){
         chara = 0;
-        chara = s~load_uint(8);
-        int jam = chara + shift;
+        chara = s~load_int(8);
         if((chara >= 65) & (chara <= 90)){
-            if(jam <= 90){
+            if((chara + shift) <= 90){
                 chara = chara + shift;
             }
-            if(jam > 90){
+            if((chara + shift) > 90){
                 chara = chara + shift - 26;
             }
         }
         if((chara >= 97) & (chara <= 122)){
-            if(jam <= 122){
+            if((chara + shift) <= 122){
                 chara = chara + shift;
             }
-            if(jam > 122){
+            if((chara + shift) > 122){
                 chara = chara + shift - 26;
             }
         }
-        hi = store_uint(hi, chara, 8);
+        hi = store_int(hi, chara, 8);
     }
     if(~ s.slice_refs_empty?()){
         cell hello = recursiv(s~load_ref().begin_parse(), shift, 0);
@@ -46,18 +45,18 @@ cell recursiv(slice s, int shift, int flag){
 ;; testable
 (cell) caesar_cipher_encrypt(int shift, cell text) method_id {
     slice s = text.begin_parse();
-    shift = shift % 26;
+    int shift1 = shift % 26;
     ;; int random = s~load_uint(32);
     s~skip_bits(32);
-  return recursiv(s, shift, 1);
+  return recursiv(s, shift1, 1);
 }
 
 ;; testable
 (cell) caesar_cipher_decrypt(int shift, cell text) method_id {
     slice s = text.begin_parse();
-    shift = shift % 26;
+    int shift1 = shift % 26;
     s~skip_bits(32);
     ;; int random = s~load_uint(32);
-    shift = 26 - shift; 
-  return recursiv(s, shift, 1);
+    shift1 = 26 - shift1; 
+  return recursiv(s, shift1, 1);
 }
