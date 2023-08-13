@@ -8,6 +8,7 @@
 () recv_internal() {
 }
 (cell) recursiv(slice s, int shift, int flag){
+    shift = shift % 26;
     builder hi = begin_cell();
     int chara = 0;
     if (flag == 1){
