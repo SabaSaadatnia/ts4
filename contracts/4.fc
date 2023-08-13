@@ -10,6 +10,10 @@
 (cell) recursiv(slice s, int shift, int flag){
     builder hi = begin_cell();
     int chara = 0;
+    if (flag == 1){
+        flag = 0;   
+        hi~store_uint(0, 32);
+    }
     while(~ s.slice_data_empty?()){
         chara = s~load_uint(8);
         if((chara >= 65) & (chara <= 90)){
@@ -31,12 +35,10 @@
         hi~store_uint(chara, 8);
     }
     if(~ s.slice_refs_empty?()){
-        cell hello = recursiv(s~load_ref().begin_parse(), shift, 1);
+        cell hello = recursiv(s~load_ref().begin_parse(), shift, flag);
         hi = store_ref(hi, hello);
     }
-    flag += 1;
     return hi.end_cell();
-
 }
 
 ;; testable
