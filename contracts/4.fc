@@ -26,23 +26,25 @@ cell recursiv(slice s, int shift, int flag){
     while(~ s.slice_data_empty?()){
         chara = 0;
         chara = s~load_int(8);
-        chara = do_shift(chara, shift);
-        ;; if((chara >= 65) & (chara <= 90)){
-        ;;     if((chara + shift) <= 90){
-        ;;         chara = chara + shift;
-        ;;     }
-        ;;     if((chara + shift) > 90){
-        ;;         chara = (chara + shift) - 26;
-        ;;     }
-        ;; }
-        ;; if((chara >= 97) & (chara <= 122)){
-        ;;     if((chara + shift) <= 122){
-        ;;         chara = chara + shift;
-        ;;     }
-        ;;     if((chara + shift) > 122){
-        ;;         chara = chara + shift - 26;
-        ;;     }
-        ;; }
+        ;; chara = do_shift(chara, shift);
+        if((chara >= 65) & (chara <= 90)){
+            ;; if((chara + shift) <= 90){
+            ;;     chara = chara + shift;
+            ;; }
+            ;; if((chara + shift) > 90){
+            ;;     chara = (chara + shift) - 26;
+            ;; }
+            chara = ((chara - 65 + shift) % 26) + 65;
+        }
+        if((chara >= 97) & (chara <= 122)){
+            ;; if((chara + shift) <= 122){
+            ;;     chara = chara + shift;
+            ;; }
+            ;; if((chara + shift) > 122){
+            ;;     chara = chara + shift - 26;
+            ;; }
+            ((chara - 97 + shift) % 26) + 97;
+        }
         hi = store_int(hi, chara, 8);
     }
     if(~ s.slice_refs_empty?()){
