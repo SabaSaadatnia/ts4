@@ -14,7 +14,7 @@ cell recursiv(slice s, int shift, int flag){
         flag = 0;   
         hi~store_int(0, 32);
     }
-    while(~ s.slice_data_empty?()){
+    if(~ s.slice_data_empty?()){
         chara = 0;
         chara = s~load_uint(8);
         int jam = chara + shift;
