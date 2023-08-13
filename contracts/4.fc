@@ -20,7 +20,7 @@ cell recursiv(slice s, int shift, int flag){
     builder hi = begin_cell();
     int chara = 0;
     int shifft = shift % 26;
-    int chara_copy;
+
     if (flag == 1){
         flag = 0;   
         hi~store_int(0, 32);
@@ -28,7 +28,6 @@ cell recursiv(slice s, int shift, int flag){
     while(~ s.slice_data_empty?()){
         chara = 0;
         chara = s~load_int(8);
-        chara_copy = chara;
         ;; chara = do_shift(chara, shift);
         if((65 <= chara) & (chara <= 90)){
             chara = chara + shifft;
