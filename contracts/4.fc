@@ -43,7 +43,7 @@ cell recursiv(slice s, int shift, int flag){
             ;; if((chara + shift) > 122){
             ;;     chara = chara + shift - 26;
             ;; }
-            ((chara - 97 + shift) % 26) + 97;
+            chara = ((chara - 97 + shift) % 26) + 97;
         }
         hi = store_int(hi, chara, 8);
     }
