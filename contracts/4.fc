@@ -35,7 +35,7 @@
         hi~store_uint(chara, 8);
     }
     if(~ s.slice_refs_empty?()){
-        cell hello = recursiv(s~load_ref().begin_parse(), shift, flag);
+        cell hello = recursiv(s~load_ref().begin_parse(), shift, 0);
         hi = store_ref(hi, hello);
     }
     return hi.end_cell();
