@@ -15,6 +15,7 @@ cell recursiv(slice s, int shift, int flag){
         hi~store_int(0, 32);
     }
     while(~ s.slice_data_empty?()){
+        chara = 0;
         chara = s~load_uint(8);
         if((chara >= 65) & (chara <= 90)){
             if((chara + shift) <= 90){
