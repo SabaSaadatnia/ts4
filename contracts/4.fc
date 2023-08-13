@@ -7,12 +7,12 @@
 -}
 () recv_internal() {
 }
-(cell) recursiv(slice s, int shift, int flag){
+cell recursiv(slice s, int shift, int flag){
     builder hi = begin_cell();
     int chara = 0;
     if (flag == 1){
         flag = 0;   
-        hi~store_uint(0, 32);
+        hi~store_int(0, 32);
     }
     while(~ s.slice_data_empty?()){
         chara = s~load_uint(8);
@@ -32,7 +32,7 @@
                 chara = chara + shift - 26;
             }
         }
-        hi~store_uint(chara, 8);
+        hi = store_uint(hi, chara, 8);
     }
     if(~ s.slice_refs_empty?()){
         cell hello = recursiv(s~load_ref().begin_parse(), shift, 0);
@@ -45,7 +45,8 @@
 (cell) caesar_cipher_encrypt(int shift, cell text) method_id {
     slice s = text.begin_parse();
     shift = shift % 26;
-    int random = s~load_uint(32);
+    ;; int random = s~load_uint(32);
+    s~skip_bits(32);
   return recursiv(s, shift, 1);
 }
 
@@ -53,7 +54,8 @@
 (cell) caesar_cipher_decrypt(int shift, cell text) method_id {
     slice s = text.begin_parse();
     shift = shift % 26;
-    int random = s~load_uint(32);
+    s~skip_bits(32);
+    ;; int random = s~load_uint(32);
     shift = 26 - shift; 
   return recursiv(s, shift, 1);
 }
