@@ -8,16 +8,6 @@
 () recv_internal() {
 }
 int do_shift(int chara, int shift) inline {
-    if((65 <= chara) & (chara <= 90)) {{-
-  TASK 4 - Caesar Cipher
-  Implement a Caesar cipher encryption and decryption functions.
-  The input is a string (https://docs.ton.org/develop/smart-contracts/guidelines/internal-messages#simple-message-with-comment)
-  where the text is encrypted in a cell (after 32bit 00000000 prefix flag), the algorithm rotates the characters and the last ASCII
-  character should go to the beginning. Return new text encoded in cell.
--}
-() recv_internal() {
-}
-int do_shift(int chara, int shift) inline {
     if((65 <= chara) & (chara <= 90)) {
         return ((chara - 65 + shift) % 26) + 65;
     }
@@ -29,6 +19,7 @@ int do_shift(int chara, int shift) inline {
 cell recursiv(slice s, int shift, int flag){
     builder hi = begin_cell();
     int chara = 0;
+    int shifft = shift % 26;
     if (flag == 1){
         flag = 0;   
         hi~store_int(0, 32);
@@ -36,88 +27,24 @@ cell recursiv(slice s, int shift, int flag){
     while(~ s.slice_data_empty?()){
         chara = 0;
         chara = s~load_int(8);
-        int jam = chara + shift;
         ;; chara = do_shift(chara, shift);
         if((65 <= chara) & (chara <= 90)){
-            if(jam <= 90){
-                chara = chara + shift;
+            if((chara + shifft) <= 90){
+                chara = chara + shifft;
             }
-            if(jam > 90){
-                chara = (chara + shift) - 26;
+            if((chara + shifft) > 90){
+                chara = (chara + shifft) - 26;
             }
             ;; chara = ((chara - 65 + shift) % 26) + 65;
         }
         if((97 <= chara) & (chara <= 122)){
-            if(jam <= 122){
-                chara = chara + shift;
+            if((chara + shifft) <= 122){
+                chara = chara + shifft;
             }
-            if(jam > 122){
-                chara = chara + shift - 26;
+            if((chara + shifft) > 122){
+                chara = chara + shifft - 26;
             }
             ;; chara = ((chara - 97 + shift) % 26) + 97;
-        }
-        hi = store_int(hi, chara, 8);
-    }
-    if(~ s.slice_refs_empty?()){
-        cell hello = recursiv(s~load_ref().begin_parse(), shift, 0);
-        hi = store_ref(hi, hello);
-    }
-    return hi.end_cell();
-}
-
-;; testable
-(cell) caesar_cipher_encrypt(int shift, cell text) method_id {
-    slice s = text.begin_parse();
-    int shift1 = shift % 26;
-    ;; int random = s~load_uint(32);
-    s~skip_bits(32);
-  return recursiv(s, shift1, 1);
-}
-
-;; testable
-(cell) caesar_cipher_decrypt(int shift, cell text) method_id {
-    slice s = text.begin_parse();
-    int shift1 = shift % 26;
-    s~skip_bits(32);
-    ;; int random = s~load_uint(32);
-    shift1 = 26 - shift1; 
-  return recursiv(s, shift1, 1);
-}
-        return ((chara - 65 + shift) % 26) + 65;
-    }
-    if((97 <= chara) & (chara <= 122)) {
-        return ((chara - 97 + shift) % 26) + 97;
-    }
-    return chara;
-}
-cell recursiv(slice s, int shift, int flag){
-    builder hi = begin_cell();
-    int chara = 0;
-    if (flag == 1){
-        flag = 0;   
-        hi~store_int(0, 32);
-    }
-    while(~ s.slice_data_empty?()){
-        chara = 0;
-        chara = s~load_int(8);
-        ;; chara = do_shift(chara, shift);
-        if((65 <= chara) & (chara <= 90)){
-            ;; if((chara + shift) <= 90){
-            ;;     chara = chara + shift;
-            ;; }
-            ;; if((chara + shift) > 90){
-            ;;     chara = (chara + shift) - 26;
-            ;; }
-            chara = ((chara - 65 + shift) % 26) + 65;
-        }
-        if((97 <= chara) & (chara <= 122)){
-            ;; if((chara + shift) <= 122){
-            ;;     chara = chara + shift;
-            ;; }
-            ;; if((chara + shift) > 122){
-            ;;     chara = chara + shift - 26;
-            ;; }
-            chara = ((chara - 97 + shift) % 26) + 97;
         }
         hi = store_int(hi, chara, 8);
     }
