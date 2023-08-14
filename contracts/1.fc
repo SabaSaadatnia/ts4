@@ -8,9 +8,22 @@
 
 () recv_internal() {
 }
-
+cell dfs(int hash, cell root){
+  slice s = root.begin_parse();
+  if(root.cell_hash() == hash){
+    return root;
+  }
+  if(~ root.cell_hash() == hash){
+    repeat(s.slice_refs()){
+      cell child = dfs(hash, s~load_ref());
+      if(child.cell_hash() == hash){
+        return child;
+      }  
+    }
+  }
+  return begin_cell().end_cell();
+}
 ;; testable
 (cell) find_branch_by_hash(int hash, cell tree) method_id {
-  int hi = 0;
-  return begin_cell().end_cell();
+  return dfs(hash, tree);
 }
