@@ -30,7 +30,7 @@ int get_size(int flag){
   if(match > 0){
     int mask = 1 << (get_size(match) - 1);
     int match_copy = match;
-    match = match & ~mask;
+    match = match & (~ mask);
     return (((match_copy >> (get_size(match_copy) - 1)) & 1), match);
   }
   return (0, 0);
