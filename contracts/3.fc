@@ -32,13 +32,12 @@ int get_size(int flag){
   return (((match >> (get_size(match) - 1)) & 1), match);
 }
 ;;make flag and value be the same size
-cell search_and_replace(slice s, int flag, int value){
+cell search_and_replace(slice s, int flag, int value,int match){
   int flag_size = get_size(flag);
-  int match = 0;
   builder ans = bagin.cell();
   while(~ s.slice_data_empty?()){
     if(get_size(match) < flag_size){
-    match = s~load_uint(1);
+    match = (match << 1) & (s~load_uint(1));
     }
     if((get_size(match) == flag_size)){
       if(match == flag){
@@ -55,15 +54,21 @@ cell search_and_replace(slice s, int flag, int value){
       }
     }
   }
+  if(match == flag){
+    repeat(get_size(flag) - get_size(value)){
+      ans~store_uint(0, 1);
+    }
+    ans~store_uint(value, get_size(value));
+    match = 0;
+  }
   if(~ s.slice_refs_empty?()){
-    cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value);
+    cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match);
     ans = store_ref(ans, hello);
   }
   return ans.end_cell();
 }
 ;; testable
 (cell) find_and_replace(int flag, int value, cell linked_list) method_id {
- 
   slice s = linked_list.begin_parse();
   return search_and_replace(s,flag,value);
 }
