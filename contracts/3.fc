@@ -70,6 +70,6 @@ cell search_and_replace(slice s, int flag, int value,int match){
 ;; testable
 (cell) find_and_replace(int flag, int value, cell linked_list) method_id {
   slice s = linked_list.begin_parse();
-  return search_and_replace(s,flag,value);
+  return search_and_replace(s,flag,value,0);
 }
 
