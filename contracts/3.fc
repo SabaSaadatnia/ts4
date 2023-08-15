@@ -42,13 +42,16 @@ cell search_and_replace(slice s, int flag, int value){
     }
     if((get_size(match) == flag_size)){
       if(match == flag){
-        ans~store_uint(value);
+        repeat(get_size(flag) - get_size(value)){
+          ans~store_uint(0, 1);
+        }
+        ans~store_uint(value, get_size(value));
         match = 0;
       }
       if(~ (match == flag)){
         int first_bit = 0;
         (first_bit, match) = altered_match(match);
-        ans~store_uint(first_bit); 
+        ans~store_uint(first_bit, 1); 
       }
     }
   }
