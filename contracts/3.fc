@@ -20,16 +20,17 @@
 }
 int get_size(int flag){
   int flag_size = 0;
-  while(flag > 0){
+  while(~(flag == 0)){
     flag = flag >> 1;
     flag_size += 1;
   }
   return flag_size; 
 }
 (int, int) altered_match(int match){
-  int mask = match >> 1; 
+  int mask = match >> 1;
+  int match_copy = match;
   match = match & mask;
-  return (((match >> (get_size(match) - 1)) & 1), match);
+  return (((match_copy >> (get_size(match_copy) - 1)) & 1), match);
 }
 ;;make flag and value be the same size
 cell search_and_replace(slice s, int flag, int value,int match){
