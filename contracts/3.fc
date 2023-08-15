@@ -27,10 +27,13 @@ int get_size(int flag){
   return flag_size; 
 }
 (int, int) altered_match(int match){;;make flag and value be the same size
-  int mask = 1 << (get_size(match) - 1);
-  int match_copy = match;
-  match = match & (~ mask);
-  return (((match_copy >> (get_size(match_copy) - 1)) & 1), match);
+  if(match > 0){
+    int mask = 1 << (get_size(match) - 1);
+    int match_copy = match;
+    match = match & ~mask;
+    return (((match_copy >> (get_size(match_copy) - 1)) & 1), match);
+  }
+  return (0, 0);
 }
 
 cell search_and_replace(slice s, int flag, int value,int match){
@@ -41,7 +44,7 @@ cell search_and_replace(slice s, int flag, int value,int match){
       match = (match << 1) & (s~load_uint(1));
     }
     if((get_size(match) == flag_size)){
-      if(match == flag){
+      if((get_size(match) == get_size(flag)) & (match == flag)){
         repeat(get_size(flag) - get_size(value)){
           ans~store_uint(0, 1);
         }
