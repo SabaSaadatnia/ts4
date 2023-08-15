@@ -41,7 +41,8 @@ cell search_and_replace(slice s, int flag, int value,int match){
   builder ans = begin_cell();
   while(~ s.slice_data_empty?()){
     if(get_size(match) < flag_size){
-      match = (match << 1) | (s~load_uint(1));
+      int bitttt = (s~load_uint(1));
+      match = (match << 1) | bitttt;
     }
     if((get_size(match) == flag_size)){
       if((get_size(match) == get_size(flag)) & (match == flag)){
