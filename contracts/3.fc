@@ -34,7 +34,7 @@ int get_size(int flag){
 ;;make flag and value be the same size
 cell search_and_replace(slice s, int flag, int value,int match){
   int flag_size = get_size(flag);
-  builder ans = bagin.cell();
+  builder ans = begin_cell();
   while(~ s.slice_data_empty?()){
     if(get_size(match) < flag_size){
     match = (match << 1) & (s~load_uint(1));
