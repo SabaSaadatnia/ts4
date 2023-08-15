@@ -36,16 +36,17 @@ int get_size(int flag){
   return (0, 0);
 }
 
-cell search_and_replace(slice s, int flag, int value,int match){
+cell search_and_replace(slice s, int flag, int value, int match){
   int flag_size = get_size(flag);
   builder ans = begin_cell();
   while(~ s.slice_data_empty?()){
     if(get_size(match) < flag_size){
-      int bitttt = (s~load_uint(1));
+      int bitttt = 0;
+      bitttt = (s~load_uint(1));
       match = (match << 1) | bitttt;
     }
     if((get_size(match) == flag_size)){
-      if((get_size(match) == get_size(flag)) & (match == flag)){
+      if((match == flag)){
         repeat(get_size(flag) - get_size(value)){
           ans~store_uint(0, 1);
         }
