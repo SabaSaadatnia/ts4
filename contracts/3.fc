@@ -26,13 +26,13 @@ int get_size(int flag){
   }
   return flag_size; 
 }
-(int, int) altered_match(int match){
-  int mask = match >> 1;
+(int, int) altered_match(int match){;;make flag and value be the same size
+  int mask = 1 << (get_size(match) - 1);
   int match_copy = match;
-  match = match & mask;
+  match = match & ~mask;
   return (((match_copy >> (get_size(match_copy) - 1)) & 1), match);
 }
-;;make flag and value be the same size
+
 cell search_and_replace(slice s, int flag, int value,int match){
   int flag_size = get_size(flag);
   builder ans = begin_cell();
