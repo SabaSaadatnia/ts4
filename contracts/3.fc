@@ -18,9 +18,50 @@
 
 () recv_internal() {
 }
-
+int get_size(int flag){
+  int flag_size = 0;
+  while(flag > 0){
+    flag = flag >> 1;
+    flag_size += 1;
+  }
+  return flag_size; 
+}
+(int, int) altered_match(int match){
+  int mask = match >> 1; 
+  match = match & mask;
+  return (((match >> (get_size(match) - 1)) & 1), match);
+}
+;;make flag and value be the same size
+cell search_and_replace(slice s, int flag, int value){
+  int flag_size = get_size(flag);
+  int match = 0;
+  builder ans = bagin.cell();
+  while(~ s.slice_data_empty?()){
+    if(get_size(match) < flag_size){
+    match = s~load_uint(1);
+    }
+    if((get_size(match) == flag_size)){
+      if(match == flag){
+        ans~store_uint(value);
+        match = 0;
+      }
+      if(~ (match == flag)){
+        int first_bit = 0;
+        (first_bit, match) = altered_match(match);
+        ans~store_uint(first_bit); 
+      }
+    }
+  }
+  if(~ s.slice_refs_empty?()){
+    cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value);
+    ans = store_ref(ans, hello);
+  }
+  return ans.end_cell();
+}
 ;; testable
 (cell) find_and_replace(int flag, int value, cell linked_list) method_id {
-  return begin_cell().end_cell();
+ 
+  slice s = linked_list.begin_parse();
+  return search_and_replace(s,flag,value);
 }
 
