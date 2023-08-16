@@ -53,10 +53,10 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
   builder ans = begin_cell();
   ;; int match_size = 0;
   int bitttt = s~load_bitttt();
-  if(match_size > 0){
-    ans~store_uint(match, match_size);
+  if((match == flag)){
+    ans~store_uint(value, get_size(value));
     match = 0;
-    match_size = 0;
+    match_size = 0; 
   }
   while(bitttt != -1){
     match = (match << 1) | bitttt;
@@ -93,8 +93,8 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
       match_size = 0;
       return ans.end_cell();
     }
-    cell hello = search_and_replace(s, flag, value, match, match_size);
-    ans = store_ref(ans, hello);
+    cell b = begin_cell().store_uint(match, match_size).end_cell();
+    ans = store_ref(ans, b);
     return ans.end_cell();
   }
   return ans.end_cell();
