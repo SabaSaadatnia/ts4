@@ -35,7 +35,7 @@ int get_size(int flag) asm "UBITSIZE";
   return ((match_copy >> (match_size)), match);
 }
 (slice, int) load_bitttt(slice s) {
-  
+
   if(s.slice_data_empty?()){
     if(s.slice_refs_empty?()){
       return (s, -1);
@@ -76,6 +76,7 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
         ans = store_ref(ans, hello);
         return ans.end_cell();
       }
+      
     }
     if(ans.builder_bits() >= 1023){
       cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match, match_size);
