@@ -35,12 +35,12 @@ int get_size(int flag){
   }
   return (0, 0);
 }
-(slice, int) load_bitttt(slice s){
+(slice, int) load_bitttt(slice s) {
   if(s.slice_data_empty?()){
     if(s.slice_refs_empty?()){
       return (s, -1);
     }
-    s = s.load_ref().begin_parse();
+    s = s~load_ref().begin_parse();
   }
   int bitttt = 0;
   bitttt = (s~load_uint(1));
