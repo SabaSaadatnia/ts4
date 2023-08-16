@@ -47,7 +47,7 @@ cell search_and_replace(slice s, int flag, int value, int match){
       match = (match << 1) | bitttt;
       match_size += 1;
     }
-    if(match_size == flag_size)){
+    if(match_size == flag_size){
       if((match == flag)){
         ans~store_uint(value, get_size(value));
         match = 0;
