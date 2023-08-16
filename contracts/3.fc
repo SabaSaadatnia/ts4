@@ -66,7 +66,7 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
     }
     if((match == flag)){
       if((1023 - ans.builder_bits()) < get_size(value)){
-        cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match, match_size);
+        cell hello = search_and_replace(s, flag, value, match, match_size);
         ans = store_ref(ans, hello);
         return ans.end_cell();
       }
