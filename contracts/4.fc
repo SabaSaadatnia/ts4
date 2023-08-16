@@ -29,6 +29,7 @@ cell recursiv(slice s, int shift, int flag){
         chara = 0;
         chara = s~load_int(8);
         ;; chara = do_shift(chara, shift);
+        
         if((65 <= chara) & (chara <= 90)){
             chara = chara + shifft;
             if(chara > 90){
