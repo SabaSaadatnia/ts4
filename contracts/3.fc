@@ -40,6 +40,9 @@ int get_size(int flag) asm "UBITSIZE";
       return (s, -1);
     }
     s = s~load_ref().begin_parse();
+    if(s.slice_data_empty?()){
+      return (s, -1);
+    }
   }
   int bitttt = 0;
   bitttt = (s~load_uint(1));
@@ -81,6 +84,7 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
       }
       return ans.end_cell();
     }
+    bitttt = s~load_bitttt();
   }
   if(match_size > 0){
     if ((1023 - ans.builder_bits()) >= get_size(value)){
