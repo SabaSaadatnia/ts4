@@ -58,7 +58,6 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
     match = 0;
     match_size = 0;
   }
-  
   while(bitttt != -1){
     match = (match << 1) | bitttt;
     match_size += 1;
@@ -88,7 +87,7 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
     bitttt = s~load_bitttt();
   }
   if(match_size > 0){
-    if ((1023 - ans.builder_bits()) >= get_size(value)){
+    if ((1023 - ans.builder_bits()) >= get_size(match)){
       ans~store_uint(match, match_size);
       match = 0;
       match_size = 0;
