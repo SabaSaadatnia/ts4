@@ -35,7 +35,6 @@ int get_size(int flag) asm "UBITSIZE";
   return ((match_copy >> (match_size)), match);
 }
 (slice, int) load_bitttt(slice s) {
-
   if(s.slice_data_empty?()){
     if(s.slice_refs_empty?()){
       return (s, -1);
@@ -52,7 +51,7 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
   ;; int match_size = 0;
   int bitttt = s~load_bitttt();
   if(match_size > 0){
-    ans~store_uint(value, get_size(value));
+    ans~store_uint(match, match_size);
     match = 0;
     match_size = 0;
   }
@@ -66,20 +65,17 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
       ans~store_uint(first_bit, 1);
     }
     if((match == flag)){
-      if ((1023 - ans.builder_bits()) >= get_size(value)){
-        ans~store_uint(value, get_size(value));
-        match = 0;
-        match_size = 0;
-      }
       if((1023 - ans.builder_bits()) < get_size(value)){
         cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match, match_size);
         ans = store_ref(ans, hello);
         return ans.end_cell();
       }
-      
+      ans~store_uint(value, get_size(value));
+      match = 0;
+      match_size = 0; 
     }
     if(ans.builder_bits() >= 1023){
-      cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match, match_size);
+      cell hello = search_and_replace(s, flag, value, match, match_size);
       ifnot(hello.begin_parse().slice_data_empty?()){
         ans = store_ref(ans, hello);
       }
@@ -88,12 +84,12 @@ cell search_and_replace(slice s, int flag, int value, int match, int match_size)
   }
   if(match_size > 0){
     if ((1023 - ans.builder_bits()) >= get_size(value)){
-      ans~store_uint(value, get_size(value));
+      ans~store_uint(match, match_size);
       match = 0;
       match_size = 0;
       return ans.end_cell();
     }
-    cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match, match_size);
+    cell hello = search_and_replace(s, flag, value, match, match_size);
     ans = store_ref(ans, hello);
     return ans.end_cell();
   }
