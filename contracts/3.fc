@@ -18,22 +18,21 @@
 
 () recv_internal() {
 }
-int get_size(int flag){
-  int flag_size = 0;
-  while(~(flag == 0)){
-    flag = flag >> 1;
-    flag_size += 1;
-  }
-  return flag_size; 
-}
-(int, int) altered_match(int match){;;make flag and value be the same size
-  if(match > 0){
-    int mask = 1 << (get_size(match) - 1);
-    int match_copy = match;
-    match = match & (~ mask);
-    return (((match_copy >> (get_size(match_copy) - 1)) & 1), match);
-  }
-  return (0, 0);
+;; int get_size(int flag){
+;;   int flag_size = 0;
+;;   while(~(flag == 0)){
+;;     flag = flag >> 1;
+;;     flag_size += 1;
+;;   }
+;;   return flag_size; 
+;; }
+int get_size(int flag) asm "UBITSIZE";
+(int, int) altered_match(int match,int match_size){
+  int mask = 1 << (match_size);
+  int match_copy = match;
+  mask &= match;
+  match = match ^ mask;
+  return ((match_copy >> (match_size)), match);
 }
 (slice, int) load_bitttt(slice s) {
   if(s.slice_data_empty?()){
@@ -46,41 +45,43 @@ int get_size(int flag){
   bitttt = (s~load_uint(1));
   return (s, bitttt);
 }
-cell search_and_replace(slice s, int flag, int value, int match){
+cell search_and_replace(slice s, int flag, int value, int match, int match_size){
   int flag_size = get_size(flag);
   builder ans = begin_cell();
-  int match_size = 0;
+  ;; int match_size = 0;
   int bitttt = s~load_bitttt();
   if(match_size > 0){
-    if ((1023 - ans.builder_bits()) >= get_size(value)){
-      ans~store_uint(value, get_size(value));
-      match = 0;
-      match_size = 0;
-    }
+    ans~store_uint(value, get_size(value));
+    match = 0;
+    match_size = 0;
   }
   while(bitttt != -1){
-    if(match_size < flag_size){
-      match = (match << 1) | bitttt;
-      match_size += 1;
+    match = (match << 1) | bitttt;
+    match_size += 1;
+    if(match_size > flag_size){
+      int first_bit = 0;
+      (first_bit, match) = altered_match(match, flag_size);
+      match_size -= 1;
+      ans~store_uint(first_bit, 1);
     }
-    if(match_size == flag_size){
-      if((match == flag)){
-        if ((1023 - ans.builder_bits()) >= get_size(value)){
-          ans~store_uint(value, get_size(value));
-          match = 0;
-          match_size = 0;
-        }
-        if(~ ((1023 - ans.builder_bits()) >= get_size(value))){
-          cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match);
-          ans = store_ref(ans, hello);
-        }
+    if((match == flag)){
+      if ((1023 - ans.builder_bits()) >= get_size(value)){
+        ans~store_uint(value, get_size(value));
+        match = 0;
+        match_size = 0;
       }
-      if(~ (match == flag)){
-        int first_bit = 0;
-        (first_bit, match) = altered_match(match);
-        match_size -= 1;
-        ans~store_uint(first_bit, 1);
+      if((1023 - ans.builder_bits()) < get_size(value)){
+        cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match, match_size);
+        ans = store_ref(ans, hello);
+        return ans.end_cell();
       }
+    }
+    if(ans.builder_bits() >= 1023){
+      cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match, match_size);
+      ifnot(hello.begin_parse().slice_data_empty?()){
+        ans = store_ref(ans, hello);
+      }
+      return ans.end_cell();
     }
   }
   if(match_size > 0){
@@ -88,13 +89,17 @@ cell search_and_replace(slice s, int flag, int value, int match){
       ans~store_uint(value, get_size(value));
       match = 0;
       match_size = 0;
+      return ans.end_cell();
     }
+    cell hello = search_and_replace(s~load_ref().begin_parse(), flag, value, match, match_size);
+    ans = store_ref(ans, hello);
+    return ans.end_cell();
   }
   return ans.end_cell();
 }
 ;; testable
 (cell) find_and_replace(int flag, int value, cell linked_list) method_id {
   slice s = linked_list.begin_parse();
-  return search_and_replace(s, flag, value, 0);
+  return search_and_replace(s, flag, value, 0, 0);
 }
 
