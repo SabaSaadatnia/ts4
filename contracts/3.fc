@@ -39,24 +39,25 @@ int get_size(int flag){
 cell search_and_replace(slice s, int flag, int value, int match){
   int flag_size = get_size(flag);
   builder ans = begin_cell();
+  int match_size = 0;
   while(~ s.slice_data_empty?()){
     if(get_size(match) < flag_size){
       int bitttt = 0;
       bitttt = (s~load_uint(1));
       match = (match << 1) | bitttt;
+      match_size += 1;
     }
     if((get_size(match) == flag_size)){
       if((match == flag)){
-        repeat(get_size(flag) - get_size(value)){
-          ans~store_uint(0, 1);
-        }
         ans~store_uint(value, get_size(value));
         match = 0;
+        match_size = 0;
       }
       if(~ (match == flag)){
         int first_bit = 0;
         (first_bit, match) = altered_match(match);
-        ans~store_uint(first_bit, 1); 
+        match_size -= 1;
+        ans~store_uint(first_bit, 1);
       }
     }
   }
